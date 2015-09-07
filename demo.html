@@ -1,0 +1,253 @@
+<!DOCTYPE html>
+<html><head>
+<meta http-equiv="content-type" content="text/html; charset=UTF-8">
+	<meta charset="UTF-8">
+
+	<title>Number converter</title>
+
+	<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
+	<script src="numberconverter.js"></script>
+
+	<script>
+		$(function(){
+			$("footer").load("../templates/footer1.html");
+			$("nav").load("../templates/navigation1.html");
+
+			var left_number_type = $('input[name=left_number_type]:checked').val();
+			var right_number_type= $('input[name=right_number_type]:checked').val();
+
+			$('#left_number').keyup(function (e) {
+				if($('input[name=left_number_type][value=binary]').is(':checked')) {
+					$('#left_number').val($('#left_number').val().replace(/[^0-1\s]/g, ''));
+					$('#right_number').val(NumberConverter["binary"][$('input[name=right_number_type]:checked').val()]($('#left_number').val()));
+				}
+				else if($('input[name=left_number_type][value=octal]').is(':checked')) {
+					$('#left_number').val($('#left_number').val().replace(/[^0-7\s]/g, ''));
+					$('#right_number').val(NumberConverter["octal"][$('input[name=right_number_type]:checked').val()]($('#left_number').val()));
+				}
+				else if($('input[name=left_number_type][value=decimal]').is(':checked')) {
+					$('#left_number').val($('#left_number').val().replace(/[^0-9\s]/g, ''));
+					$('#right_number').val(NumberConverter["decimal"][$('input[name=right_number_type]:checked').val()]($('#left_number').val()));
+				}
+				else if($('input[name=left_number_type][value=hex]').is(':checked')) {
+					$('#left_number').val($('#left_number').val().replace(/[^0-9a-fA-F\s]/g, '').toLowerCase());
+					$('#right_number').val(NumberConverter["hex"][$('input[name=right_number_type]:checked').val()]($('#left_number').val()));
+				}
+				else if($('input[name=left_number_type][value=base32]').is(':checked')) {
+					$('#left_number').val($('#left_number').val().replace(/[^=2-7a-zA-Z\s]/g, '').toLowerCase());
+					$('#right_number').val(NumberConverter["base32"][$('input[name=right_number_type]:checked').val()]($('#left_number').val()));
+				}
+				else if($('input[name=left_number_type][value=base64]').is(':checked')) {
+					$('#left_number').val($('#left_number').val().replace(/[^\+=\/0-9a-zA-Z\s]/g, ''));
+					$('#right_number').val(NumberConverter["base64"][$('input[name=right_number_type]:checked').val()]($('#left_number').val()));
+				}
+			});
+
+			$('#right_number').keyup(function (e) {
+				if($('input[name=right_number_type][value=binary]').is(':checked')) {
+					$('#right_number').val($('#right_number').val().replace(/[^0-1\s]/g, ''));
+					$('#left_number').val(NumberConverter["binary"][$('input[name=left_number_type]:checked').val()]($('#right_number').val()));
+				}
+				else if($('input[name=right_number_type][value=octal]').is(':checked')) {
+					$('#right_number').val($('#right_number').val().replace(/[^0-7\s]/g, ''));
+					$('#left_number').val(NumberConverter["octal"][$('input[name=left_number_type]:checked').val()]($('#right_number').val()));
+				}
+				else if($('input[name=right_number_type][value=decimal]').is(':checked')) {
+					$('#right_number').val($('#right_number').val().replace(/[^0-9\s]/g, ''));
+					$('#left_number').val(NumberConverter["decimal"][$('input[name=left_number_type]:checked').val()]($('#right_number').val()));
+				}
+				else if($('input[name=right_number_type][value=hex]').is(':checked')) {
+					$('#right_number').val($('#right_number').val().replace(/[^0-9a-fA-F\s]/g, '').toLowerCase());
+					$('#left_number').val(NumberConverter["hex"][$('input[name=left_number_type]:checked').val()]($('#right_number').val()));
+				}
+				else if($('input[name=right_number_type][value=base32]').is(':checked')) {
+					$('#right_number').val($('#right_number').val().replace(/[^=2-7a-zA-Z\s]/g, '').toLowerCase());
+					$('#left_number').val(NumberConverter["base32"][$('input[name=left_number_type]:checked').val()]($('#right_number').val()));
+				}
+				else if($('input[name=right_number_type][value=base64]').is(':checked')) {
+					$('#right_number').val($('#right_number').val().replace(/[^\+=\/0-9a-zA-Z\s]/g, ''));
+					$('#left_number').val(NumberConverter["base64"][$('input[name=left_number_type]:checked').val()]($('#right_number').val()));
+				}
+			});
+
+			$('input[name=left_number_type][value=binary]').change(function() {
+				$('#left_number').val(NumberConverter[right_number_type]['binary']($('#right_number').val()));
+				left_number_type = 'binary';
+			});
+			$('input[name=left_number_type][value=octal]').change(function() {
+				$('#left_number').val(NumberConverter[right_number_type]['octal']($('#right_number').val()));
+				left_number_type = 'octal';
+			});
+			$('input[name=left_number_type][value=decimal]').change(function() {
+				$('#left_number').val(NumberConverter[right_number_type]['decimal']($('#right_number').val()));
+				left_number_type = 'decimal';
+			});
+			$('input[name=left_number_type][value=hex]').change(function() {
+				$('#left_number').val(NumberConverter[right_number_type]['hex']($('#right_number').val()));
+				left_number_type = 'hex';
+			});
+			$('input[name=left_number_type][value=base32]').change(function() {
+				$('#left_number').val(NumberConverter[right_number_type]['base32']($('#right_number').val()));
+				left_number_type = 'base32';
+			});
+			$('input[name=left_number_type][value=base64]').change(function() {
+				$('#left_number').val(NumberConverter[right_number_type]['base64']($('#right_number').val()));
+				left_number_type = 'base64';
+			});
+
+			$('input[name=right_number_type][value=binary]').change(function() {
+				$('#right_number').val(NumberConverter[left_number_type]['binary']($('#left_number').val()));
+				right_number_type = 'binary';
+			});
+			$('input[name=right_number_type][value=octal]').change(function() {
+				$('#right_number').val(NumberConverter[left_number_type]['octal']($('#left_number').val()));
+				right_number_type = 'octal';
+			});
+			$('input[name=right_number_type][value=decimal]').change(function() {
+				$('#right_number').val(NumberConverter[left_number_type]['decimal']($('#left_number').val()));
+				right_number_type = 'decimal';
+			});
+			$('input[name=right_number_type][value=hex]').change(function() {
+				$('#right_number').val(NumberConverter[left_number_type]['hex']($('#left_number').val()));
+				right_number_type = 'hex';
+			});
+			$('input[name=right_number_type][value=base32]').change(function() {
+				$('#right_number').val(NumberConverter[left_number_type]['base32']($('#left_number').val()));
+				right_number_type = 'base32';
+			});
+			$('input[name=right_number_type][value=base64]').change(function() {
+				$('#right_number').val(NumberConverter[left_number_type]['base64']($('#left_number').val()));
+				right_number_type = 'base64';
+			});
+		});
+	</script>
+
+</head>
+<style>
+body {
+	color: grey;
+}
+
+header {
+	text-align: center;
+	clear: both;
+}
+
+main {
+	text-align: center;
+	width: 90%;
+	margin: auto;
+}
+
+footer {
+	text-align: center;
+	clear: both;
+}
+
+a {
+	text-decoration: none;
+}
+
+.divide_line {
+	background: red;
+	border: 1px solid grey;
+	height: 1px;
+	width: 100%;
+	clear: both;
+}
+
+form {
+	width: 100%;
+	display: table;
+	margin-top: 1em;
+	margin-bottom: 1em;
+}
+
+#left_number_type {
+	float: left;
+	display: table-cell;
+	text-align: left;
+	width: 10%;
+	min-width: 50px;
+}
+
+#right_number_type {
+	float: right;
+	display: table-cell;
+	text-align: left;
+	width: 10%;
+	min-width: 50px;
+}
+
+textarea {
+	border-top: none;
+	border-left: none;
+	border-right: none;
+	border-bottom : 1px solid red;
+	box-shadow: 0 4px 2px -2px gray;
+	width: 38%;
+	font-size: 1.2em;
+	text-align: left;
+	resize: none;
+	float: left;
+	margin: auto;
+	min-width: 200px;
+	height: 14em;
+	background: white;
+}
+
+span {
+	vertical-align: center;
+	line-height: 14em;
+	height: 14em;
+	display: block;
+	float: left;
+	margin: auto;
+	width: 2%;
+}
+</style>
+
+<body>
+
+	<header>
+		<h1>Number converter</h1>
+		<h3>Version β</h3>
+	</header>
+
+	<div class="divide_line"></div>
+
+	<main>
+		<form action="" id="number_converter">
+			<div id="left_number_type">
+				<p><input name="left_number_type" value="binary" checked="checked" type="radio">Binary</p>
+				<p><input name="left_number_type" value="octal" type="radio">Octal</p>
+				<p><input name="left_number_type" value="decimal" type="radio">Decimal</p>
+				<p><input name="left_number_type" value="hex" type="radio">Hex</p>
+				<p><input name="left_number_type" value="base32" type="radio">Base 32</p>
+				<p><input name="left_number_type" value="base64" type="radio">Base 64</p>
+			</div>
+			<textarea name="left number" id="left_number" rows="8"></textarea>
+			<span> = </span>
+			<textarea name="right number" id="right_number" rows="8"></textarea>
+
+			<div id="right_number_type">
+				<p><input name="right_number_type" value="binary" checked="checked" type="radio">Binary</p>
+				<p><input name="right_number_type" value="octal" type="radio">Octal</p>
+				<p><input name="right_number_type" value="decimal" type="radio">Decimal</p>
+				<p><input name="right_number_type" value="hex" type="radio">Hex</p>
+				<p><input name="right_number_type" value="base32" type="radio">Base 32</p>
+				<p><input name="right_number_type" value="base64" type="radio">Base 64</p>
+			</div>
+		</form>
+		<p>This tool is free and open source, protected by GPLv3 (or at your choice any later version). Source code can be found on
+		<a href="https://github.com/vernocte/js_number_converter">GitHub</a>. In case you find bug in converter please check our
+		<a href="https://github.com/vernocte/js_number_converter/issues?q=is%3Aopen+is%3Aissue">Bug tracker</a> to see if we already
+		know about it. In case you found something new, you can create new ticket and help us build better code.
+		</p><p>
+	</p></main>
+
+	<footer><div class="divide_line"></div>Copyright Vernocte 2015 vernocte@gmail.com</footer>
+
+
+
+</body></html>
